@@ -1,3 +1,3 @@
 # Rainbow
 
-[!ep01](images/ep01.png)
+![ep01](images/ep01.png)
