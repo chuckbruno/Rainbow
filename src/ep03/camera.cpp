@@ -100,18 +100,23 @@ void RT::Camera::UpdateCameraGeometry()
 	m_projectionScreenV.Normalize();
 
 	//Thirdly, compute the position of the center point of the screen
+	m_projectionScreenCentre = m_cameraPosition + (m_cameraLength * m_alignmentVector);
 	m_projectionScreenU = m_projectionScreenU * m_cameraHorizontalSize;
 	m_projectionScreenV = m_projectionScreenV * (m_cameraHorizontalSize / m_cameraAspectRatio);
 
 }
 
-RT::Ray RT::Camera::GenerateRay(float proScreenX, float proScreenY)
+bool RT::Camera::GenerateRay(float proScreenX, float proScreenY, RT::Ray& cameraRay)
 {
 	// Compute the location of the screen point in world coordinates
 	qbVector<double> screenWorldPart1 = m_projectionScreenCentre + (m_projectionScreenU * proScreenX);
 	qbVector<double> screenWorldCoordinate = screenWorldPart1 + (m_projectionScreenV * proScreenY);
 
 	//Use this point along with the camera position to compute the ray
-	return Ray(m_cameraPosition, screenWorldCoordinate);
+	cameraRay.m_point1 = m_cameraPosition;
+	cameraRay.m_point2 = screenWorldCoordinate;
+	cameraRay.m_lab = screenWorldCoordinate - m_cameraPosition;
+
+	return true;
 
 }
